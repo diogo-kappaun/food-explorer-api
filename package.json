@@ -1,0 +1,21 @@
+{
+  "name": "food-explorer-back-end",
+  "version": "1.0.0",
+  "description": "API desenvolvida para ser consumida pelo front end da aplicação Food Explorer",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js"
+  },
+  "keywords": [],
+  "author": "Diogo Kappaun",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@rocketseat/eslint-config": "^2.2.2",
+    "eslint": "^8.57.0"
+  }
+}
