@@ -1,12 +1,12 @@
+import 'dotenv/config'
 import express from 'express'
 import 'express-async-errors'
+import database from './database/sqlite/index.js'
+import { AppError } from './utils/AppError.js'
 
-import { AppError } from './utils/AppError'
-
-import 'dotenv/config'
+database()
 
 const app = express()
-const PORT = process.env.PORT || 3333
 
 app.use((error, request, response, next) => {
   if (error instanceof AppError) {
@@ -24,4 +24,5 @@ app.use((error, request, response, next) => {
   })
 })
 
+const PORT = process.env.PORT || 3333
 app.listen(PORT, () => console.log(`Server is running | Port: ${PORT}`))
