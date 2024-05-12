@@ -18,5 +18,9 @@ export function ensureAuthenticated(request, response, next) {
     request.user = {
       id: Number(user_id),
     }
-  } catch (error) {}
+
+    return next()
+  } catch {
+    throw new AppError('JWT Token inválido!', 401)
+  }
 }
