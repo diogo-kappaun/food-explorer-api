@@ -8,7 +8,7 @@ export const up = (knex) =>
       .inTable('orders')
       .onDelete('CASCADE')
     table.integer('amount').notNullable()
-    table.float('price').notNullable()
+    table.integer('price-in-cents').notNullable()
     table.timestamp('created_at').default(knex.fn.now())
     table.timestamp('updated_at').default(knex.fn.now())
   })
