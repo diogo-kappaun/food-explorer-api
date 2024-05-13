@@ -1,5 +1,5 @@
 {
-  "name": "food-explorer-back-end",
+  "name": "food-explorer-api",
   "version": "1.0.0",
   "description": "API desenvolvida para ser consumida pelo front end da aplicação Food Explorer",
   "type": "module",
