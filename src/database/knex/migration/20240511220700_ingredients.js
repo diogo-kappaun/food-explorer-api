@@ -6,7 +6,7 @@ export const up = (knex) =>
       .references('id')
       .inTable('dishes')
       .onDelete('CASCADE')
-    table.string('name').notNullable()
+    table.text('name').notNullable()
     table.timestamp('created_at').default(knex.fn.now())
     table.timestamp('updated_at').default(knex.fn.now())
   })
