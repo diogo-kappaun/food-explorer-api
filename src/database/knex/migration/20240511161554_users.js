@@ -9,7 +9,7 @@ export const up = (knex) =>
         useNative: true,
         enumName: 'roles',
       })
-      .NotNullable()
+      .notNullable()
       .default('customer')
     table.text('avatar').nullable()
     table.timestamp('created_at').default(knex.fn.now())
