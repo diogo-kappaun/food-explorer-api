@@ -1,6 +1,8 @@
-import { verify } from 'jsonwebtoken'
-import authConfig from '../config/auth'
-import { AppError } from '../utils/AppError'
+import jwt from 'jsonwebtoken'
+import authConfig from '../config/auth.js'
+import { AppError } from '../utils/AppError.js'
+
+const { verify } = jwt
 
 export function ensureAuthenticated(request, response, next) {
   const authHeader = request.headers.authorization
