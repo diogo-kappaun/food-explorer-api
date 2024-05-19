@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import { dbConnection } from '../database/knex/index.js'
 import { AppError } from '../utils/AppError.js'
+import { RegEx } from '../utils/RegEx.js'
 
 const { hash, compare } = bcryptjs
 
@@ -13,6 +14,9 @@ export class UserController {
     if (!name || !email || !password) {
       throw new AppError('Todos os campos são obrigatórios.')
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const validateRegEx = new RegEx(name, email, password)
 
     const emailAlreadyInUse = await knex('users')
       .select('email')
@@ -52,12 +56,12 @@ export class UserController {
       }
     }
 
-    user.name = name || user.name
-    user.email = email || user.email
-
     if (!currentPassword && newPassword) {
       throw new AppError('Senha atual não informada!')
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const validateRegEx = new RegEx(name, email, newPassword)
 
     if (currentPassword && newPassword) {
       const checksCurrentPasswordIsValid = await compare(
@@ -71,8 +75,11 @@ export class UserController {
 
       const hashedNewPassword = await hash(newPassword, 8)
 
-      user.password = hashedNewPassword
+      user.password = hashedNewPassword || user.password
     }
+
+    user.email = email || user.email
+    user.name = name || user.name
 
     await knex('users')
       .update({
