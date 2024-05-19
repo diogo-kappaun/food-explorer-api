@@ -12,7 +12,9 @@ export class UserController {
     const { name, email, password } = request.body
 
     if (!name || !email || !password) {
-      throw new AppError('Todos os campos são obrigatórios.')
+      throw new AppError(
+        'Por favor, preencha todos os campos antes de prosseguir.',
+      )
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,7 +26,9 @@ export class UserController {
       .first()
 
     if (emailAlreadyInUse) {
-      throw new AppError('O E-mail informado já está registrado.')
+      throw new AppError(
+        'Este e-mail já está registrado. Por favor, utilize outro.',
+      )
     }
 
     const hashedPassword = await hash(password, 8)
@@ -52,12 +56,14 @@ export class UserController {
       const emailAlreadyInUse = await knex('users').where({ email }).first()
 
       if (emailAlreadyInUse && emailAlreadyInUse.id !== userId) {
-        throw new AppError('E-mail informado está em uso!')
+        throw new AppError(
+          'O e-mail informado já está em uso. Por favor, use outro e-mail.',
+        )
       }
     }
 
     if (!currentPassword && newPassword) {
-      throw new AppError('Senha atual não informada!')
+      throw new AppError('Por favor, informe a senha atual.')
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -70,7 +76,7 @@ export class UserController {
       )
 
       if (!checksCurrentPasswordIsValid) {
-        throw new AppError('Senha atual informada não é valida!')
+        throw new AppError('A senha atual informada não é válida.')
       }
 
       const hashedNewPassword = await hash(newPassword, 8)
