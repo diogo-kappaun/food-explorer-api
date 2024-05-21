@@ -24,4 +24,12 @@ export class DishesController {
 
     return response.json('Prato cadastrado com sucesso!')
   }
+
+  async delete(request, response) {
+    const { id } = request.query
+
+    await knex('dishes').where({ id }).delete()
+
+    return response.json('Prato deletado com sucesso!')
+  }
 }
