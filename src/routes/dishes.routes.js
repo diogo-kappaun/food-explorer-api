@@ -6,8 +6,11 @@ const dishesController = new DishesController()
 
 const dishesRoutes = Router()
 
-dishesRoutes.post('/', ensureAuthenticated, dishesController.create)
-dishesRoutes.put('/', ensureAuthenticated, dishesController.update)
-dishesRoutes.delete('/', ensureAuthenticated, dishesController.delete)
+dishesRoutes.use(ensureAuthenticated)
+
+dishesRoutes.post('/', dishesController.create)
+dishesRoutes.put('/', dishesController.update)
+dishesRoutes.delete('/', dishesController.delete)
+dishesRoutes.get('/', dishesController.index)
 
 export { dishesRoutes }

@@ -79,6 +79,46 @@ export class DishesController {
     return response.json('Prato atualizado com sucesso!')
   }
 
+  async index(request, response) {
+    const { name, ingredients, category } = request.query
+
+    let dishes
+
+    if (ingredients) {
+      const filterIngredients = ingredients
+        .split(',')
+        .map((ingredient) => ingredient.trim())
+
+      dishes = await knex('ingredients')
+        .select([
+          'dishes.id',
+          'dishes.name',
+          'dishes.description',
+          'dishes.price_in_cents',
+          'dishes.image',
+        ])
+        .whereLike('dishes.name', `%${name}%`)
+        .whereIn('ingredients.name', filterIngredients)
+        .where({ category })
+        .innerJoin('dishes', 'dishes.id', 'ingredients.dishe_id')
+        .groupBy('dishes.name')
+    } else {
+      dishes = await knex('dishes')
+        .select([
+          'dishes.id',
+          'dishes.name',
+          'dishes.description',
+          'dishes.price_in_cents',
+          'dishes.image',
+        ])
+        .whereLike('name', `%${name}%`)
+        .where({ category })
+        .orderBy('name')
+    }
+
+    return response.json(dishes)
+  }
+
   async delete(request, response) {
     const { id } = request.query
 
