@@ -1,4 +1,5 @@
 import { dbConnection } from '../database/knex/index.js'
+import { AppError } from '../utils/AppError.js'
 
 const knex = dbConnection
 
@@ -147,6 +148,12 @@ export class DishesController {
 
   async delete(request, response) {
     const { id } = request.query
+
+    console.log(id)
+
+    if (id === '') {
+      throw new AppError('Prato não informado!')
+    }
 
     await knex('dishes').where({ id }).delete()
 
