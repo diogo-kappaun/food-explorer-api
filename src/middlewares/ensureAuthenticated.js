@@ -15,10 +15,11 @@ export function ensureAuthenticated(request, response, next) {
 
   try {
     // eslint-disable-next-line camelcase
-    const { sub: user_id } = verify(token, authConfig.jwt.secret)
+    const { sub: user_id, role } = verify(token, authConfig.jwt.secret)
 
     request.user = {
       id: Number(user_id),
+      role,
     }
 
     return next()
