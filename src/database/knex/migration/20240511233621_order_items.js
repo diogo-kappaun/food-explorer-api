@@ -1,7 +1,7 @@
 export const up = (knex) =>
   knex.schema.createTable('order-items', (table) => {
     table.increments('id')
-    table.integer('dishe_id').references('id').inTable('dishes')
+    table.integer('dish_id').references('id').inTable('dishes')
     table
       .integer('order_id')
       .references('id')

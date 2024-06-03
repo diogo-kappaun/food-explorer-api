@@ -6,7 +6,7 @@ export class DishesController {
   async create(request, response) {
     const { name, description, price, category, ingredients } = request.body
 
-    const [disheId] = await knex('dishes').insert({
+    const [dishId] = await knex('dishes').insert({
       name,
       description,
       price_in_cents: price,
@@ -15,7 +15,7 @@ export class DishesController {
 
     const ingredientsInsert = ingredients.map((name) => {
       return {
-        dishe_id: disheId,
+        dish_id: dishId,
         name,
       }
     })
@@ -29,17 +29,17 @@ export class DishesController {
     const { name, description, price, category, newIngredients } = request.body
     const { id } = request.query
 
-    const dishe = await knex('dishes').where({ id }).first()
+    const dish = await knex('dishes').where({ id }).first()
 
-    dishe.name = name || dishe.name
-    dishe.description = description || dishe.description
-    dishe.price = price || dishe.price
-    dishe.category = category || dishe.category
+    dish.name = name || dish.name
+    dish.description = description || dish.description
+    dish.price = price || dish.price
+    dish.category = category || dish.category
 
     if (newIngredients) {
       const ingredientsList = await knex('ingredients')
         .select('name')
-        .where({ dishe_id: id })
+        .where({ dish_id: id })
 
       const dishIngredients = ingredientsList.map(
         (ingredient) => ingredient.name,
@@ -55,26 +55,26 @@ export class DishesController {
 
       ingredientsToAdd.forEach(async (ingredient) => {
         await knex('ingredients').insert({
-          dishe_id: dishe.id,
+          dish_id: dish.id,
           name: ingredient,
         })
       })
 
       ingredientsToRemove.forEach(async (ingredient) => {
         await knex('ingredients')
-          .where({ name: ingredient, dishe_id: dishe.id })
+          .where({ name: ingredient, dish_id: dish.id })
           .delete()
       })
     }
 
     await knex('dishes')
       .update({
-        name: dishe.name,
-        description: dishe.description,
-        price_in_cents: dishe.price,
-        category: dishe.category,
+        name: dish.name,
+        description: dish.description,
+        price_in_cents: dish.price,
+        category: dish.category,
       })
-      .where({ id: dishe.id })
+      .where({ id: dish.id })
 
     return response.json('Prato atualizado com sucesso!')
   }
@@ -126,10 +126,10 @@ export class DishesController {
       'dishes.category',
     ])
 
-    const ingredients = await knex('ingredients').select('name', 'dishe_id')
+    const ingredients = await knex('ingredients').select('name', 'dish_id')
     const dishesWithIngredients = dishes.map((dish) => {
       const filteredIngredients = ingredients.filter(
-        (ingredient) => ingredient.dishe_id === dish.id,
+        (ingredient) => ingredient.dish_id === dish.id,
       )
 
       const dishIngredients = filteredIngredients.map(
