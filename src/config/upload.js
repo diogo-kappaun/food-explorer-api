@@ -4,7 +4,6 @@ import path from 'path'
 import { AppError } from '../utils/AppError.js'
 
 const TMP_FOLDER = path.resolve('tmp')
-const UPLOADS_FOLDER = path.resolve('tmp', 'uploads')
 
 const MULTER = {
   storage: multer.diskStorage({
@@ -37,6 +36,5 @@ const MULTER = {
 
 export default {
   TMP_FOLDER,
-  UPLOADS_FOLDER,
   MULTER,
 }
