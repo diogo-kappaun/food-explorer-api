@@ -14,24 +14,19 @@ const MULTER = {
 
       return callback(null, fileName)
     },
-    limits: {
-      fileSize: 2 * 1024 * 1024,
-    },
-    fileFilter: (request, file, callback) => {
-      const allowedMimes = [
-        'image/jpeg',
-        'image/pjpeg',
-        'image/png',
-        'image/gif',
-      ]
-
-      if (allowedMimes.includes(file.mimetype)) {
-        callback(null, true)
-      } else {
-        callback(new AppError('Tipo de arquivo inválido!'))
-      }
-    },
   }),
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
+  fileFilter: (request, file, callback) => {
+    const allowedMimes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif']
+
+    if (allowedMimes.includes(file.mimetype)) {
+      callback(null, true)
+    } else {
+      callback(new AppError('Tipo de arquivo inválido!'))
+    }
+  },
 }
 
 export default {
