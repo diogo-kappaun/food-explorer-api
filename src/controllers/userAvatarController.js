@@ -1,10 +1,8 @@
-import { dbConnection } from '../database/knex/index.js'
-import { DiskStorage } from '../providers/DiskStorage.js'
+import path from 'path'
+import cloudinary from '../config/cloudinary.js'
+import { dbConnection as knex } from '../database/knex/index.js'
+import diskStorage from '../providers/DiskStorage.js'
 import { AppError } from '../utils/AppError.js'
-
-const knex = dbConnection
-
-const diskStorage = new DiskStorage()
 
 export class UserAvatarController {
   async update(request, response) {
@@ -18,15 +16,27 @@ export class UserAvatarController {
       throw new AppError('Usuário não autenticado!', 401)
     }
 
-    if (user.avatar) {
-      await diskStorage.deleteFile(user.avatar)
+    if (user.avatar_id) {
+      try {
+        await cloudinary.uploader.destroy(user.avatar_id)
+      } catch {
+        throw new AppError('Não foi possivel apagar a imagem!')
+      }
     }
 
-    const filename = await diskStorage.saveFile(avatarFilename)
+    try {
+      const image = path.resolve('tmp', avatarFilename)
 
-    user.avatar = filename
+      const { public_id } = await cloudinary.uploader.upload(image)
 
-    await knex('users').update(user).where({ id: userId })
+      await diskStorage.deleteFile(image)
+
+      user.avatar_id = public_id
+
+      await knex('users').update(user).where({ id: userId })
+    } catch (error) {
+      throw new AppError('Não foi possivel carregar a imagem')
+    }
 
     return response.json({ user })
   }
