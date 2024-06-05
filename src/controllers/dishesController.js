@@ -81,10 +81,11 @@ export class DishesController {
   }
 
   async index(request, response) {
-    /*
-    const { name, ingredients, category } = request.query
-    
-     if (ingredients) {
+    const { name, ingredients } = request.query
+
+    let dishes
+
+    if (ingredients) {
       const filterIngredients = ingredients
         .split(',')
         .map((ingredient) => ingredient.trim())
@@ -95,8 +96,7 @@ export class DishesController {
           'dishes.name',
           'dishes.description',
           'dishes.price_in_cents',
-          'dishes.image',
-          'dishes.category',
+          'dishes.image_id',
         ])
         .whereLike('dishes.name', `%${name}%`)
         .whereIn('ingredients.name', filterIngredients)
@@ -109,34 +109,29 @@ export class DishesController {
           'dishes.name',
           'dishes.description',
           'dishes.price_in_cents',
-          'dishes.image',
-          'dishes.category',
+          'dishes.image_id',
         ])
-        .whereLike('name', `%${name}%`)
-        .orderBy('name')
+        .whereLike('dishes.name', `%${name}%`)
+        .orderBy('dishes.name')
     } else {
-    } 
-    */
+      dishes = await knex('dishes').select([
+        'dishes.id',
+        'dishes.name',
+        'dishes.description',
+        'dishes.price_in_cents',
+        'dishes.image_id',
+      ])
+    }
 
-    const dishes = await knex('dishes').select([
-      'dishes.id',
-      'dishes.name',
-      'dishes.description',
-      'dishes.price_in_cents',
-      'dishes.image',
-      'dishes.category',
-    ])
+    const AllIngredients = await knex('ingredients')
 
-    const ingredients = await knex('ingredients').select('name', 'dish_id')
     const dishesWithIngredients = dishes.map((dish) => {
-      const filteredIngredients = ingredients.filter(
+      const filteredIngredients = AllIngredients.filter(
         (ingredient) => ingredient.dish_id === dish.id,
       )
-
       const dishIngredients = filteredIngredients.map(
         (ingredient) => ingredient.name,
       )
-
       return {
         ...dish,
         ingredients: dishIngredients,
