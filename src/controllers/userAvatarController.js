@@ -20,7 +20,7 @@ export class UserAvatarController {
       try {
         await cloudinary.uploader.destroy(user.avatar_id)
       } catch {
-        throw new AppError('Não foi possivel apagar a imagem!')
+        throw new AppError('Não foi possível apagar a imagem!')
       }
     }
 
@@ -35,9 +35,9 @@ export class UserAvatarController {
 
       await knex('users').update(user).where({ id: userId })
     } catch (error) {
-      throw new AppError('Não foi possivel carregar a imagem')
+      throw new AppError('Não foi possível carregar a imagem!')
     }
 
-    return response.json({ user })
+    return response.json('Imagem de perfil atualizada com sucesso!')
   }
 }
