@@ -81,6 +81,7 @@ export class DishesController {
   }
 
   async index(request, response) {
+    const user_id = request.user.id
     const { name, ingredients } = request.query
 
     let dishes
@@ -125,7 +126,11 @@ export class DishesController {
 
     const AllIngredients = await knex('ingredients')
 
-    const dishesWithIngredients = dishes.map((dish) => {
+    const dishesWithIngredientsPromise = dishes.map(async (dish) => {
+      const isFavorite = !!(await knex('favorites')
+        .where({ dish_id: dish.id, user_id })
+        .first())
+
       const filteredIngredients = AllIngredients.filter(
         (ingredient) => ingredient.dish_id === dish.id,
       )
@@ -135,8 +140,13 @@ export class DishesController {
       return {
         ...dish,
         ingredients: dishIngredients,
+        isFavorite,
       }
     })
+
+    const dishesWithIngredients = await Promise.all(
+      dishesWithIngredientsPromise,
+    )
 
     return response.json(dishesWithIngredients)
   }
