@@ -37,5 +37,6 @@ dishesRoutes.patch(
   dishImageController.update,
 )
 dishesRoutes.get('/', dishesController.index)
+dishesRoutes.get('/:id', dishesController.show)
 
 export { dishesRoutes }

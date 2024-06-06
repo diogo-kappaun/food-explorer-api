@@ -151,6 +151,19 @@ export class DishesController {
     return response.json(dishesWithIngredients)
   }
 
+  async show(request, response) {
+    const user_id = request.user.id
+    const { id } = request.params
+
+    const dish = await knex('dishes').where({ id }).first()
+
+    const isFavorite = !!(await knex('favorites')
+      .where({ user_id, dish_id: id })
+      .first())
+
+    return response.json({ dish, isFavorite })
+  }
+
   async delete(request, response) {
     const { id } = request.query
 
