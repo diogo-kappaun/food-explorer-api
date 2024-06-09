@@ -36,4 +36,8 @@ export class UserRepository {
       })
       .where({ id: user_id })
   }
+
+  async updateAll(user, user_id) {
+    await knex('users').update(user).where({ id: user_id })
+  }
 }
