@@ -18,7 +18,6 @@ export class UserController {
       )
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const validateRegEx = new RegEx(name, email, password)
 
     const emailAlreadyInUse = await userRepository.findByEmail(email)
@@ -60,7 +59,6 @@ export class UserController {
       throw new AppError('Por favor, informe a senha atual.')
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const validateRegEx = new RegEx(name, email, newPassword)
 
     if (currentPassword && newPassword) {
