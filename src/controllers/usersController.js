@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import { dbConnection as knex } from '../database/knex/index.js'
 import { UserRepository } from '../repositories/UserRepository.js'
+import { UserCreateService } from '../services/UserCreateService.js'
 import { AppError } from '../utils/AppError.js'
 import { RegEx } from '../utils/RegEx.js'
 
@@ -12,27 +13,10 @@ export class UserController {
   async create(request, response) {
     const { name, email, password } = request.body
 
-    if (!name || !email || !password) {
-      throw new AppError(
-        'Por favor, preencha todos os campos antes de prosseguir.',
-      )
-    }
+    const userCreateService = new UserCreateService(userRepository)
+    await userCreateService.execute({ name, email, password })
 
-    const validateRegEx = new RegEx(name, email, password)
-
-    const emailAlreadyInUse = await userRepository.findByEmail(email)
-
-    if (emailAlreadyInUse) {
-      throw new AppError(
-        'Este e-mail já está registrado. Por favor, utilize outro.',
-      )
-    }
-
-    const hashedPassword = await hash(password, 8)
-
-    await userRepository.create({ name, email, password: hashedPassword })
-
-    return response.json(`Usuário cadastrado com sucesso!`)
+    return response.json('Usuário cadastrado com sucesso!')
   }
 
   async update(request, response) {
