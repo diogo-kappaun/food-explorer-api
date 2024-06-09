@@ -1,11 +1,12 @@
 import bcryptjs from 'bcryptjs'
-import { dbConnection } from '../database/knex/index.js'
+import { dbConnection as knex } from '../database/knex/index.js'
+import { UserRepository } from '../repositories/UserRepository.js'
 import { AppError } from '../utils/AppError.js'
 import { RegEx } from '../utils/RegEx.js'
 
 const { hash, compare } = bcryptjs
 
-const knex = dbConnection
+const userRepository = new UserRepository()
 
 export class UserController {
   async create(request, response) {
@@ -20,10 +21,7 @@ export class UserController {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const validateRegEx = new RegEx(name, email, password)
 
-    const emailAlreadyInUse = await knex('users')
-      .select('email')
-      .where({ email })
-      .first()
+    const emailAlreadyInUse = await userRepository.findByEmail(email)
 
     if (emailAlreadyInUse) {
       throw new AppError(
@@ -33,11 +31,7 @@ export class UserController {
 
     const hashedPassword = await hash(password, 8)
 
-    await knex('users').insert({
-      name,
-      email,
-      password: hashedPassword,
-    })
+    await userRepository.create({ name, email, password: hashedPassword })
 
     return response.json(`Usuário cadastrado com sucesso!`)
   }
