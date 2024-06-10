@@ -26,4 +26,31 @@ export class DishRepository {
       })
       .where({ id })
   }
+
+  async getDishesByName(name) {
+    const dishes = await knex('dishes')
+      .select([
+        'dishes.id',
+        'dishes.name',
+        'dishes.description',
+        'dishes.price_in_cents',
+        'dishes.image_id',
+      ])
+      .whereLike('dishes.name', `%${name}%`)
+      .orderBy('dishes.name')
+
+    return dishes
+  }
+
+  async getDishes() {
+    const dishes = await knex('dishes').select([
+      'dishes.id',
+      'dishes.name',
+      'dishes.description',
+      'dishes.price_in_cents',
+      'dishes.image_id',
+    ])
+
+    return dishes
+  }
 }

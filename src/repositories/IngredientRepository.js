@@ -23,4 +23,27 @@ export class IngredientRepository {
   async deleteIngredients({ dish_id, name }) {
     await knex('ingredients').where({ dish_id, name }).delete()
   }
+
+  async getDishesByIngredients({ filterIngredients, name = '' }) {
+    const dishes = await knex('ingredients')
+      .select([
+        'dishes.id',
+        'dishes.name',
+        'dishes.description',
+        'dishes.price_in_cents',
+        'dishes.image_id',
+      ])
+      .whereLike('dishes.name', `%${name}%`)
+      .whereIn('ingredients.name', filterIngredients)
+      .innerJoin('dishes', 'dishes.id', 'ingredients.dish_id')
+      .groupBy('dishes.id')
+
+    return dishes
+  }
+
+  async getAllIngredients() {
+    const AllIngredients = await knex('ingredients')
+
+    return AllIngredients
+  }
 }
