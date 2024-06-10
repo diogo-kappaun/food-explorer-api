@@ -1,24 +1,16 @@
-import { dbConnection as knex } from '../database/knex/index.js'
-import { AppError } from '../utils/AppError.js'
+import { FavoriteRepository } from '../repositories/FavoriteRepository.js'
+import { FavoriteCreateService } from '../services/FavoriteCreateService.js'
+import { FavoriteDeleteService } from '../services/FavoriteDeleteService.js'
+
+const favoriteRepository = new FavoriteRepository()
 
 export class FavoritesController {
   async create(request, response) {
     const user_id = request.user.id
     const { dish_id } = request.query
 
-    const isFavorite = await knex('favorites')
-      .where({ user_id, dish_id })
-      .first()
-
-    if (isFavorite) {
-      throw new AppError('Prato informado já está favoritado!')
-    }
-
-    await knex('favorites')
-      .insert({ user_id, dish_id })
-      .catch((err) => {
-        throw new AppError(err)
-      })
+    const favoriteCreateService = new FavoriteCreateService(favoriteRepository)
+    await favoriteCreateService.execute({ user_id, dish_id })
 
     return response.json('Prato favoritado!')
   }
@@ -26,10 +18,7 @@ export class FavoritesController {
   async index(request, response) {
     const user_id = request.user.id
 
-    const favorites = await knex('favorites')
-      .select('dishes.id', 'dishes.image_id', 'dishes.name')
-      .where({ user_id })
-      .innerJoin('dishes', 'dishes.id', 'favorites.dish_id')
+    const favorites = await favoriteRepository.getUserFavorites({ user_id })
 
     return response.json({ favorites })
   }
@@ -38,15 +27,8 @@ export class FavoritesController {
     const user_id = request.user.id
     const { dish_id } = request.query
 
-    const isFavorite = await knex('favorites')
-      .where({ user_id, dish_id })
-      .first()
-
-    if (!isFavorite) {
-      throw new AppError('Prato informado não está favoritado!')
-    }
-
-    await knex('favorites').where({ user_id, dish_id }).delete()
+    const favoriteDeleteService = new FavoriteDeleteService(favoriteRepository)
+    await favoriteDeleteService.execute({ user_id, dish_id })
 
     return response.json('Favorito removido!')
   }
