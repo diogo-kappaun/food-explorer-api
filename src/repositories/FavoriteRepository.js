@@ -3,9 +3,9 @@ import { AppError } from '../utils/AppError.js'
 
 export class FavoriteRepository {
   async findByUserAndDishID({ user_id, dish_id }) {
-    const isFavorite = await knex('favorites')
-      .where({ user_id, dish_id })
-      .first()
+    const isFavorite = !!(await knex('favorites')
+      .where({ dish_id, user_id })
+      .first())
 
     return isFavorite
   }
