@@ -4,6 +4,7 @@ import { FavoriteRepository } from '../repositories/FavoriteRepository.js'
 import { IngredientRepository } from '../repositories/IngredientRepository.js'
 import { DishCreateService } from '../services/DishCreateService.js'
 import { DishIndexService } from '../services/DishIndexService.js'
+import { DishShowService } from '../services/DishShowService.js'
 import { DishUpdateService } from '../services/DishUpdateService.js'
 import { AppError } from '../utils/AppError.js'
 
@@ -65,11 +66,14 @@ export class DishesController {
     const user_id = request.user.id
     const { id } = request.params
 
-    const dish = await knex('dishes').where({ id }).first()
-
-    const isFavorite = !!(await knex('favorites')
-      .where({ user_id, dish_id: id })
-      .first())
+    const dishShowService = new DishShowService(
+      dishRepository,
+      favoriteRepository,
+    )
+    const { dish, isFavorite } = await dishShowService.execute({
+      user_id,
+      dish_id: id,
+    })
 
     return response.json({ dish, isFavorite })
   }
