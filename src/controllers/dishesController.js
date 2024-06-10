@@ -1,27 +1,21 @@
-import { dbConnection } from '../database/knex/index.js'
+import { dbConnection as knex } from '../database/knex/index.js'
+import { DishRepository } from '../repositories/DishRepository.js'
+import { IngredientRepository } from '../repositories/IngredientRepository.js'
+import { DishCreateService } from '../services/DishCreateService.js'
 import { AppError } from '../utils/AppError.js'
 
-const knex = dbConnection
+const dishRepository = new DishRepository()
+const ingredientRepository = new IngredientRepository()
 
 export class DishesController {
   async create(request, response) {
-    const { name, description, price, category, ingredients } = request.body
+    const { name, description, price, ingredients } = request.body
 
-    const [dishId] = await knex('dishes').insert({
-      name,
-      description,
-      price_in_cents: price,
-      category,
-    })
-
-    const ingredientsInsert = ingredients.map((name) => {
-      return {
-        dish_id: dishId,
-        name,
-      }
-    })
-
-    await knex('ingredients').insert(ingredientsInsert)
+    const dishCreateService = new DishCreateService(
+      dishRepository,
+      ingredientRepository,
+    )
+    await dishCreateService.execute({ name, description, price, ingredients })
 
     return response.json('Prato cadastrado com sucesso!')
   }
