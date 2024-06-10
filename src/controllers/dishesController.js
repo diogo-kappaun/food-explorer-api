@@ -2,6 +2,7 @@ import { dbConnection as knex } from '../database/knex/index.js'
 import { DishRepository } from '../repositories/DishRepository.js'
 import { IngredientRepository } from '../repositories/IngredientRepository.js'
 import { DishCreateService } from '../services/DishCreateService.js'
+import { DishUpdateService } from '../services/DishUpdateService.js'
 import { AppError } from '../utils/AppError.js'
 
 const dishRepository = new DishRepository()
@@ -21,55 +22,20 @@ export class DishesController {
   }
 
   async update(request, response) {
-    const { name, description, price, category, newIngredients } = request.body
+    const { name, description, price, newIngredients } = request.body
     const { id } = request.query
 
-    const dish = await knex('dishes').where({ id }).first()
-
-    dish.name = name || dish.name
-    dish.description = description || dish.description
-    dish.price = price || dish.price
-    dish.category = category || dish.category
-
-    if (newIngredients) {
-      const ingredientsList = await knex('ingredients')
-        .select('name')
-        .where({ dish_id: id })
-
-      const dishIngredients = ingredientsList.map(
-        (ingredient) => ingredient.name,
-      )
-
-      const ingredientsToAdd = newIngredients.filter((ingredient) => {
-        return !dishIngredients.includes(ingredient)
-      })
-
-      const ingredientsToRemove = dishIngredients.filter((ingredient) => {
-        return !newIngredients.includes(ingredient)
-      })
-
-      ingredientsToAdd.forEach(async (ingredient) => {
-        await knex('ingredients').insert({
-          dish_id: dish.id,
-          name: ingredient,
-        })
-      })
-
-      ingredientsToRemove.forEach(async (ingredient) => {
-        await knex('ingredients')
-          .where({ name: ingredient, dish_id: dish.id })
-          .delete()
-      })
-    }
-
-    await knex('dishes')
-      .update({
-        name: dish.name,
-        description: dish.description,
-        price_in_cents: dish.price,
-        category: dish.category,
-      })
-      .where({ id: dish.id })
+    const dishUpdateService = new DishUpdateService(
+      dishRepository,
+      ingredientRepository,
+    )
+    await dishUpdateService.execute({
+      name,
+      description,
+      price,
+      newIngredients,
+      id,
+    })
 
     return response.json('Prato atualizado com sucesso!')
   }

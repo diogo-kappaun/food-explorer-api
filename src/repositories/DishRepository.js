@@ -10,4 +10,20 @@ export class DishRepository {
 
     return dish_id
   }
+
+  async getDishByID(id) {
+    const dish = await knex('dishes').where({ id }).first()
+
+    return dish
+  }
+
+  async dishUpdate({ name, description, price_in_cents, id }) {
+    await knex('dishes')
+      .update({
+        name,
+        description,
+        price_in_cents,
+      })
+      .where({ id })
+  }
 }
