@@ -1,12 +1,12 @@
-import { dbConnection as knex } from '../database/knex/index.js'
 import { DishRepository } from '../repositories/DishRepository.js'
 import { FavoriteRepository } from '../repositories/FavoriteRepository.js'
 import { IngredientRepository } from '../repositories/IngredientRepository.js'
+
 import { DishCreateService } from '../services/DishCreateService.js'
+import { DishDeleteService } from '../services/DishDeleteService.js'
 import { DishIndexService } from '../services/DishIndexService.js'
 import { DishShowService } from '../services/DishShowService.js'
 import { DishUpdateService } from '../services/DishUpdateService.js'
-import { AppError } from '../utils/AppError.js'
 
 const dishRepository = new DishRepository()
 const ingredientRepository = new IngredientRepository()
@@ -81,13 +81,8 @@ export class DishesController {
   async delete(request, response) {
     const { id } = request.query
 
-    console.log(id)
-
-    if (id === '') {
-      throw new AppError('Prato não informado!')
-    }
-
-    await knex('dishes').where({ id }).delete()
+    const dishDeleteService = new DishDeleteService(dishRepository)
+    await dishDeleteService.execute(id)
 
     return response.json('Prato deletado com sucesso!')
   }
