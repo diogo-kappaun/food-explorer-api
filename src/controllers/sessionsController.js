@@ -13,8 +13,15 @@ export class SessionsController {
       password,
     })
 
+    response.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+      maxAge: 15 * 60 * 1000,
+    })
+
     delete user.password
 
-    return response.json({ user, token })
+    return response.json({ user })
   }
 }
