@@ -5,13 +5,13 @@ import { AppError } from '../utils/AppError.js'
 const { verify } = jwt
 
 export function ensureAuthenticated(request, response, next) {
-  const authHeader = request.headers
+  const authHeader = request.headers.authorization
 
-  if (!authHeader.cookie) {
+  if (!authHeader) {
     throw new AppError('JWT Token inválido!', 401)
   }
 
-  const [, token] = authHeader.split('token=')
+  const [, token] = authHeader.split(' ')
 
   try {
     // eslint-disable-next-line camelcase
