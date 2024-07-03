@@ -9,8 +9,11 @@ export class UserAvatarController {
     const avatarFilename = request.file.filename
 
     const userAvatarService = new UserAvatarService(userRepository)
-    await userAvatarService.execute({ user_id, avatarFilename })
+    const imageUrl = await userAvatarService.execute({
+      user_id,
+      avatarFilename,
+    })
 
-    return response.json('Imagem de perfil atualizada com sucesso!')
+    return response.json(imageUrl)
   }
 }

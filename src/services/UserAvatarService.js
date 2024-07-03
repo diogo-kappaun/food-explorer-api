@@ -33,6 +33,8 @@ export class UserAvatarService {
       user.avatar_id = public_id
 
       await this.userRepository.updateAll(user, user_id)
+
+      return public_id
     } catch (error) {
       throw new AppError('Não foi possível carregar a imagem!')
     }
