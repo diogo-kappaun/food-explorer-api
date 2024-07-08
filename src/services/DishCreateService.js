@@ -5,7 +5,7 @@ export class DishCreateService {
   }
 
   async execute({ name, description, price, ingredients }) {
-    const [dishId] = await this.dishRepository.create({
+    const dishId = await this.dishRepository.create({
       name,
       description,
       price,
