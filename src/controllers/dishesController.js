@@ -20,9 +20,14 @@ export class DishesController {
       dishRepository,
       ingredientRepository,
     )
-    await dishCreateService.execute({ name, description, price, ingredients })
+    const dishId = await dishCreateService.execute({
+      name,
+      description,
+      price,
+      ingredients,
+    })
 
-    return response.json('Prato cadastrado com sucesso!')
+    return response.json(dishId)
   }
 
   async update(request, response) {

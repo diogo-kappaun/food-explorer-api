@@ -19,5 +19,7 @@ export class DishCreateService {
     })
 
     await this.ingredientRepository.create(ingredientsInsert)
+
+    return dishId
   }
 }
