@@ -4,10 +4,11 @@ export class DishCreateService {
     this.ingredientRepository = ingredientRepository
   }
 
-  async execute({ name, description, price, ingredients }) {
+  async execute({ name, description, category, price, ingredients }) {
     const dishId = await this.dishRepository.create({
       name,
       description,
+      category,
       price,
     })
 

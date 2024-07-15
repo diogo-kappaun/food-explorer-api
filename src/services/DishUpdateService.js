@@ -4,11 +4,12 @@ export class DishUpdateService {
     this.ingredientRepository = ingredientRepository
   }
 
-  async execute({ name, description, price, newIngredients, id }) {
+  async execute({ name, description, category, price, newIngredients, id }) {
     const dish = await this.dishRepository.getDishByID(id)
 
     dish.name = name || dish.name
     dish.description = description || dish.description
+    dish.category = category || dish.category
     dish.price = price || dish.price
 
     if (newIngredients) {
@@ -45,6 +46,7 @@ export class DishUpdateService {
     await this.dishRepository.dishUpdate({
       name: dish.name,
       description: dish.description,
+      category: dish.category,
       price_in_cents: dish.price,
       id: dish.id,
     })

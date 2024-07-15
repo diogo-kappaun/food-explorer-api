@@ -14,7 +14,7 @@ const favoriteRepository = new FavoriteRepository()
 
 export class DishesController {
   async create(request, response) {
-    const { name, description, price, ingredients } = request.body
+    const { name, description, category, price, ingredients } = request.body
 
     const dishCreateService = new DishCreateService(
       dishRepository,
@@ -23,6 +23,7 @@ export class DishesController {
     const dishId = await dishCreateService.execute({
       name,
       description,
+      category,
       price,
       ingredients,
     })
@@ -31,7 +32,7 @@ export class DishesController {
   }
 
   async update(request, response) {
-    const { name, description, price, newIngredients } = request.body
+    const { name, description, category, price, newIngredients } = request.body
     const { id } = request.query
 
     const dishUpdateService = new DishUpdateService(
@@ -41,6 +42,7 @@ export class DishesController {
     await dishUpdateService.execute({
       name,
       description,
+      category,
       price,
       newIngredients,
       id,
