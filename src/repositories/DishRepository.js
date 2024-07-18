@@ -1,10 +1,11 @@
 import { dbConnection as knex } from '../database/knex/index.js'
 
 export class DishRepository {
-  async create({ name, description, price }) {
+  async create({ name, description, category, price }) {
     const [dish_id] = await knex('dishes').insert({
       name,
       description,
+      category,
       price_in_cents: price,
     })
 
