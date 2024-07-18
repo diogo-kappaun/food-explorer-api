@@ -13,7 +13,11 @@ export class SessionsController {
       password,
     })
 
+    delete user.id
     delete user.password
+    delete user.role
+    delete user.created_at
+    delete user.updated_at
 
     return response.json({ user, token })
   }
