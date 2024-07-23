@@ -4,15 +4,22 @@ export class DishUpdateService {
     this.ingredientRepository = ingredientRepository
   }
 
-  async execute({ name, description, category, price, newIngredients, id }) {
+  async execute({
+    name,
+    description,
+    category,
+    price_in_cents,
+    ingredients,
+    id,
+  }) {
     const dish = await this.dishRepository.getDishByID(id)
 
     dish.name = name || dish.name
     dish.description = description || dish.description
     dish.category = category || dish.category
-    dish.price = price || dish.price
+    dish.price_in_cents = price_in_cents || dish.price_in_cents
 
-    if (newIngredients) {
+    if (ingredients) {
       const ingredientsList =
         await this.ingredientRepository.getIngredientsByDishID(id)
 
@@ -20,12 +27,12 @@ export class DishUpdateService {
         (ingredient) => ingredient.name,
       )
 
-      const ingredientsToAdd = newIngredients.filter((ingredient) => {
+      const ingredientsToAdd = ingredients.filter((ingredient) => {
         return !dishIngredients.includes(ingredient)
       })
 
       const ingredientsToRemove = dishIngredients.filter((ingredient) => {
-        return !newIngredients.includes(ingredient)
+        return !ingredients.includes(ingredient)
       })
 
       ingredientsToAdd.forEach(async (ingredient) => {
@@ -47,7 +54,7 @@ export class DishUpdateService {
       name: dish.name,
       description: dish.description,
       category: dish.category,
-      price_in_cents: dish.price,
+      price_in_cents: dish.price_in_cents,
       id: dish.id,
     })
   }

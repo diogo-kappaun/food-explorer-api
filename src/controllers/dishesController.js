@@ -32,7 +32,8 @@ export class DishesController {
   }
 
   async update(request, response) {
-    const { name, description, category, price, newIngredients } = request.body
+    const { name, description, category, price_in_cents, ingredients } =
+      request.body
     const { id } = request.query
 
     const dishUpdateService = new DishUpdateService(
@@ -43,8 +44,8 @@ export class DishesController {
       name,
       description,
       category,
-      price,
-      newIngredients,
+      price_in_cents,
+      ingredients,
       id,
     })
 
@@ -76,13 +77,14 @@ export class DishesController {
     const dishShowService = new DishShowService(
       dishRepository,
       favoriteRepository,
+      ingredientRepository,
     )
-    const { dish, isFavorite } = await dishShowService.execute({
+    const { dish, ingredients, isFavorite } = await dishShowService.execute({
       user_id,
       dish_id: id,
     })
 
-    return response.json({ dish, isFavorite })
+    return response.json({ dish, ingredients, isFavorite })
   }
 
   async delete(request, response) {

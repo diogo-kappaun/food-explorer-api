@@ -1,7 +1,8 @@
 export class DishShowService {
-  constructor(dishRepository, favoriteRepository) {
+  constructor(dishRepository, favoriteRepository, ingredientRepository) {
     this.dishRepository = dishRepository
     this.favoriteRepository = favoriteRepository
+    this.ingredientRepository = ingredientRepository
   }
 
   async execute({ user_id, dish_id }) {
@@ -12,6 +13,11 @@ export class DishShowService {
       dish_id,
     })
 
-    return { dish, isFavorite }
+    const dishIngredients =
+      await this.ingredientRepository.getIngredientsByDishID(dish_id)
+
+    const ingredients = dishIngredients.map((ingredient) => ingredient.name)
+
+    return { dish, ingredients, isFavorite }
   }
 }
