@@ -6,7 +6,7 @@ export class DishRepository {
       name,
       description,
       category,
-      price_in_cents: price,
+      price,
     })
 
     return dish_id
@@ -18,12 +18,12 @@ export class DishRepository {
     return dish
   }
 
-  async dishUpdate({ name, description, price_in_cents, id }) {
+  async dishUpdate({ name, description, price, id }) {
     await knex('dishes')
       .update({
         name,
         description,
-        price_in_cents,
+        price,
       })
       .where({ id })
   }
@@ -34,7 +34,7 @@ export class DishRepository {
         'dishes.id',
         'dishes.name',
         'dishes.description',
-        'dishes.price_in_cents',
+        'dishes.price',
         'dishes.image_id',
       ])
       .whereLike('dishes.name', `%${name}%`)
@@ -48,7 +48,7 @@ export class DishRepository {
       'dishes.id',
       'dishes.name',
       'dishes.description',
-      'dishes.price_in_cents',
+      'dishes.price',
       'dishes.image_id',
     ])
 

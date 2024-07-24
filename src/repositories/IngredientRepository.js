@@ -30,7 +30,7 @@ export class IngredientRepository {
         'dishes.id',
         'dishes.name',
         'dishes.description',
-        'dishes.price_in_cents',
+        'dishes.price',
         'dishes.image_id',
       ])
       .whereLike('dishes.name', `%${name}%`)

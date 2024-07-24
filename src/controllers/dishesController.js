@@ -32,8 +32,7 @@ export class DishesController {
   }
 
   async update(request, response) {
-    const { name, description, category, price_in_cents, ingredients } =
-      request.body
+    const { name, description, category, price, ingredients } = request.body
     const { id } = request.query
 
     const dishUpdateService = new DishUpdateService(
@@ -44,7 +43,7 @@ export class DishesController {
       name,
       description,
       category,
-      price_in_cents,
+      price,
       ingredients,
       id,
     })
