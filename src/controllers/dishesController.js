@@ -78,12 +78,12 @@ export class DishesController {
       favoriteRepository,
       ingredientRepository,
     )
-    const { dish, ingredients, isFavorite } = await dishShowService.execute({
+    const { dishComplete } = await dishShowService.execute({
       user_id,
       dish_id: id,
     })
 
-    return response.json({ dish, ingredients, isFavorite })
+    return response.json(dishComplete)
   }
 
   async delete(request, response) {

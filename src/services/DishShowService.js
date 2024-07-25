@@ -18,6 +18,8 @@ export class DishShowService {
 
     const ingredients = dishIngredients.map((ingredient) => ingredient.name)
 
-    return { dish, ingredients, isFavorite }
+    const dishComplete = { ...dish, ingredients, isFavorite }
+
+    return { dishComplete }
   }
 }
