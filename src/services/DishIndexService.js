@@ -26,11 +26,6 @@ export class DishIndexService {
     const AllIngredients = await this.ingredientRepository.getAllIngredients()
 
     const dishesWithIngredientsPromise = dishes.map(async (dish) => {
-      const isFavorite = await this.favoriteRepository.isFavorite({
-        user_id,
-        dish_id: dish.id,
-      })
-
       const filteredIngredients = AllIngredients.filter(
         (ingredient) => ingredient.dish_id === dish.id,
       )
@@ -40,7 +35,6 @@ export class DishIndexService {
       return {
         ...dish,
         ingredients: dishIngredients,
-        isFavorite,
       }
     })
 
