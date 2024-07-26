@@ -1,18 +1,17 @@
 import { FavoriteRepository } from '../repositories/FavoriteRepository.js'
-import { FavoriteCreateService } from '../services/FavoriteCreateService.js'
-import { FavoriteDeleteService } from '../services/FavoriteDeleteService.js'
+import { FavoriteToggleService } from '../services/FavoriteToggleService.js'
 
 const favoriteRepository = new FavoriteRepository()
 
 export class FavoritesController {
-  async create(request, response) {
+  async toggle(request, response) {
     const user_id = request.user.id
     const { dish_id } = request.query
 
-    const favoriteCreateService = new FavoriteCreateService(favoriteRepository)
-    await favoriteCreateService.execute({ user_id, dish_id })
+    const favoriteToggleService = new FavoriteToggleService(favoriteRepository)
+    const favorites = await favoriteToggleService.execute({ user_id, dish_id })
 
-    return response.json('Prato favoritado!')
+    return response.json(favorites)
   }
 
   async index(request, response) {
@@ -21,15 +20,5 @@ export class FavoritesController {
     const favorites = await favoriteRepository.getUserFavorites({ user_id })
 
     return response.json({ favorites })
-  }
-
-  async delete(request, response) {
-    const user_id = request.user.id
-    const { dish_id } = request.query
-
-    const favoriteDeleteService = new FavoriteDeleteService(favoriteRepository)
-    await favoriteDeleteService.execute({ user_id, dish_id })
-
-    return response.json('Favorito removido!')
   }
 }

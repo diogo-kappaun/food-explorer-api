@@ -6,8 +6,7 @@ const favoritesRoutes = Router()
 
 const favoritesController = new FavoritesController()
 
-favoritesRoutes.post('/', ensureAuthenticated, favoritesController.create)
+favoritesRoutes.post('/', ensureAuthenticated, favoritesController.toggle)
 favoritesRoutes.get('/', ensureAuthenticated, favoritesController.index)
-favoritesRoutes.delete('/', ensureAuthenticated, favoritesController.delete)
 
 export { favoritesRoutes }
