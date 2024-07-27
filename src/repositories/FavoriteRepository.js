@@ -20,7 +20,12 @@ export class FavoriteRepository {
 
   async getUserFavorites({ user_id }) {
     const favorites = await knex('favorites')
-      .select('dishes.id', 'dishes.image_id', 'dishes.name')
+      .select(
+        'dishes.id',
+        'dishes.image_id',
+        'dishes.description',
+        'dishes.name',
+      )
       .where({ user_id })
       .innerJoin('dishes', 'dishes.id', 'favorites.dish_id')
 
