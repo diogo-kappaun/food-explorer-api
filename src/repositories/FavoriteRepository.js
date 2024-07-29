@@ -28,6 +28,7 @@ export class FavoriteRepository {
       )
       .where({ user_id })
       .innerJoin('dishes', 'dishes.id', 'favorites.dish_id')
+      .orderBy('dishes.name')
 
     return favorites
   }
