@@ -34,6 +34,7 @@ export class DishRepository {
         'dishes.id',
         'dishes.name',
         'dishes.description',
+        'dishes.category',
         'dishes.price',
         'dishes.image_id',
       ])
@@ -48,6 +49,7 @@ export class DishRepository {
       'dishes.id',
       'dishes.name',
       'dishes.description',
+      'dishes.category',
       'dishes.price',
       'dishes.image_id',
     ])
