@@ -18,11 +18,12 @@ export class DishRepository {
     return dish
   }
 
-  async dishUpdate({ name, description, price, id }) {
+  async dishUpdate({ name, description, category, price, id }) {
     await knex('dishes')
       .update({
         name,
         description,
+        category,
         price,
       })
       .where({ id })
