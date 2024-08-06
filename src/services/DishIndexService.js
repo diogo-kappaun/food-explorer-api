@@ -5,23 +5,8 @@ export class DishIndexService {
     this.favoriteRepository = favoriteRepository
   }
 
-  async execute({ ingredients, name, user_id }) {
-    let dishes
-
-    if (ingredients) {
-      const filterIngredients = ingredients
-        .split(',')
-        .map((ingredient) => ingredient.trim())
-
-      dishes = await this.ingredientRepository.getDishesByIngredients({
-        filterIngredients,
-        name,
-      })
-    } else if (name) {
-      dishes = await this.dishRepository.getDishesByName(name)
-    } else {
-      dishes = await this.dishRepository.getDishes()
-    }
+  async execute() {
+    const dishes = await this.dishRepository.getDishes()
 
     const AllIngredients = await this.ingredientRepository.getAllIngredients()
 

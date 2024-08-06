@@ -5,7 +5,7 @@ export class DishShowService {
     this.ingredientRepository = ingredientRepository
   }
 
-  async execute({ user_id, dish_id }) {
+  async execute({ dish_id }) {
     const dish = await this.dishRepository.getDishByID(dish_id)
 
     const dishIngredients =

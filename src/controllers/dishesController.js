@@ -52,25 +52,17 @@ export class DishesController {
   }
 
   async index(request, response) {
-    const user_id = request.user.id
-    const { name, ingredients } = request.query
-
     const dishIndexService = new DishIndexService(
       dishRepository,
       ingredientRepository,
       favoriteRepository,
     )
-    const dishesWithIngredients = await dishIndexService.execute({
-      ingredients,
-      name,
-      user_id,
-    })
+    const dishesWithIngredients = await dishIndexService.execute({})
 
     return response.json(dishesWithIngredients)
   }
 
   async show(request, response) {
-    const user_id = request.user.id
     const { id } = request.params
 
     const dishShowService = new DishShowService(
@@ -79,7 +71,6 @@ export class DishesController {
       ingredientRepository,
     )
     const { dishComplete } = await dishShowService.execute({
-      user_id,
       dish_id: id,
     })
 
