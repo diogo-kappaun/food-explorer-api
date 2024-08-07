@@ -1,7 +1,7 @@
 import path from 'path'
 import Path from './src/utils/Path.js'
 
-module.exports = {
+export default {
   development: {
     client: 'sqlite3',
     connection: {
